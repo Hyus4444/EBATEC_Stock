@@ -41,7 +41,7 @@ def create_user(
     db: Session = Depends(get_db),
     current_user=Depends(require_admin),
 ):
-    return create_user_service(db, payload)
+    return create_user_service(db, payload, current_user)
 
 
 @router.put("/{user_id}", response_model=UserResponse)
@@ -51,7 +51,7 @@ def update_user(
     db: Session = Depends(get_db),
     current_user=Depends(require_admin),
 ):
-    return update_user_service(db, user_id, payload)
+    return update_user_service(db, user_id, payload, current_user)
 
 
 @router.patch("/{user_id}/status", response_model=UserResponse)
@@ -61,4 +61,4 @@ def update_user_status(
     db: Session = Depends(get_db),
     current_user=Depends(require_admin),
 ):
-    return update_user_status_service(db, user_id, payload)
+    return update_user_status_service(db, user_id, payload, current_user)

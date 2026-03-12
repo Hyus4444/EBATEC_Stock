@@ -9,7 +9,7 @@ from app.repositories.user_repository import (
     get_user_by_email,
     get_user_by_id,
 )
-
+from app.services.audit_service import create_audit_log
 
 def serialize_user(user: User) -> dict:
     return {
@@ -38,7 +38,7 @@ def get_user_or_404(db: Session, user_id: int) -> User:
     return user
 
 
-def create_user_service(db: Session, payload) -> dict:
+def create_user_service(db: Session, payload, current_user) -> dict:
     existing_user = get_user_by_email(db, payload.correo)
     if existing_user:
         raise HTTPException(
@@ -62,15 +62,24 @@ def create_user_service(db: Session, payload) -> dict:
     )
 
     db.add(user)
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        usuario_id=current_user.id,
+        accion="CREAR",
+        entidad="USUARIO",
+        entidad_id=user.id,
+        detalle=f"Se creó el usuario {user.correo}",
+    )
+
     db.commit()
     db.refresh(user)
-    db.refresh(role)
-    user.rol = role
 
     return serialize_user(user)
 
 
-def update_user_service(db: Session, user_id: int, payload) -> dict:
+def update_user_service(db: Session, user_id: int, payload, current_user) -> dict:
     user = get_user_or_404(db, user_id)
 
     existing_user = get_user_by_email(db, payload.correo)
@@ -91,18 +100,40 @@ def update_user_service(db: Session, user_id: int, payload) -> dict:
     user.correo = payload.correo
     user.rol_id = payload.rol_id
 
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        usuario_id=current_user.id,
+        accion="ACTUALIZAR",
+        entidad="USUARIO",
+        entidad_id=user.id,
+        detalle=f"Se actualizó el usuario {user.correo}",
+    )
+
     db.commit()
     db.refresh(user)
-    db.refresh(role)
-    user.rol = role
 
     return serialize_user(user)
 
 
-def update_user_status_service(db: Session, user_id: int, payload) -> dict:
+def update_user_status_service(db: Session, user_id: int, payload, current_user) -> dict:
     user = get_user_or_404(db, user_id)
 
     user.activo = payload.activo
+
+    db.flush()
+
+    accion_estado = "ACTIVAR" if payload.activo else "DESACTIVAR"
+
+    create_audit_log(
+        db=db,
+        usuario_id=current_user.id,
+        accion=accion_estado,
+        entidad="USUARIO",
+        entidad_id=user.id,
+        detalle=f"Se cambió el estado del usuario {user.correo} a {'activo' if payload.activo else 'inactivo'}",
+    )
 
     db.commit()
     db.refresh(user)
