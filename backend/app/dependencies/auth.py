@@ -53,6 +53,25 @@ def get_current_user(
 
     return user
 
+def require_admin_or_operario(current_user=Depends(get_current_user)):
+    if current_user.rol.nombre not in ["ADMINISTRADOR", "OPERARIO"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes permisos para realizar esta acción",
+        )
+
+    return current_user
+
+
+def require_any_authenticated(current_user=Depends(get_current_user)):
+    if current_user.rol.nombre not in ["ADMINISTRADOR", "OPERARIO", "CONSULTA"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes permisos para realizar esta acción",
+        )
+
+    return current_user
+
 
 def require_admin(current_user=Depends(get_current_user)):
     if current_user.rol.nombre != "ADMINISTRADOR":

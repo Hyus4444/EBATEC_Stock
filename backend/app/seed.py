@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from app.models.category import Category
 
 from app.core.database import SessionLocal
 from app.core.security import hash_password
@@ -10,6 +11,16 @@ ADMIN_EMAIL = "admin@ebatec.com"
 ADMIN_PASSWORD = "EbatecAdmin2026*"
 ADMIN_NAME = "Administrador"
 
+
+def seed_categories(db: Session) -> None:
+    categories = ["MATERIA_PRIMA", "ACCESORIO"]
+
+    for category_name in categories:
+        existing_category = db.query(Category).filter(Category.nombre == category_name).first()
+        if not existing_category:
+            db.add(Category(nombre=category_name))
+
+    db.commit()
 
 def seed_roles(db: Session) -> None:
     roles = ["ADMINISTRADOR", "OPERARIO", "CONSULTA"]
@@ -48,6 +59,7 @@ def run_seed() -> None:
     try:
         seed_roles(db)
         seed_admin_user(db)
+        seed_categories(db)
         print("Seed completado correctamente.")
         print(f"Admin: {ADMIN_EMAIL}")
         print(f"Password: {ADMIN_PASSWORD}")
