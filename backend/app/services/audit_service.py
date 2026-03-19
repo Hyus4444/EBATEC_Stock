@@ -1,0 +1,40 @@
+from sqlalchemy.orm import Session
+
+from app.models.audit_log import AuditLog
+from app.repositories.audit_repository import get_audit_logs
+
+
+def create_audit_log(
+    db: Session,
+    usuario_id: int,
+    accion: str,
+    entidad: str,
+    entidad_id: int,
+    detalle: str | None = None,
+) -> AuditLog:
+    audit_log = AuditLog(
+        usuario_id=usuario_id,
+        accion=accion,
+        entidad=entidad,
+        entidad_id=entidad_id,
+        detalle=detalle,
+    )
+
+    db.add(audit_log)
+    return audit_log
+
+def list_audit_logs_service(db):
+    logs = get_audit_logs(db)
+
+    return [
+        {
+            "id": log.id,
+            "usuario_id": log.usuario_id,
+            "accion": log.accion,
+            "entidad": log.entidad,
+            "entidad_id": log.entidad_id,
+            "detalle": log.detalle,
+            "fecha": log.fecha,
+        }
+        for log in logs
+    ]
