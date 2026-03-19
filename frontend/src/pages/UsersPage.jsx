@@ -26,12 +26,22 @@ export default function UsersPage() {
 
   return (
     <div className="card">
-      <div className="page-header">
-        <h1>Usuarios</h1>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button onClick={loadUsers}>Recargar</button>
-          <Link to="/users/new">
-            <button>Nuevo usuario</button>
+      <div className="inventory-toolbar users-toolbar-right">
+        <div className="actions-row actions-column-like-mockup">
+          <div className="floating-action-group">
+            <button className="btn-light-icon" onClick={loadUsers} type="button">
+              ↻
+            </button>
+            <span className="floating-action-label">Recargar</span>
+          </div>
+
+          <Link to="/users/new" className="floating-action-link">
+            <div className="floating-action-group">
+              <button className="btn-light-icon" type="button">
+                +
+              </button>
+              <span className="floating-action-label">Añadir nuevo usuario</span>
+            </div>
           </Link>
         </div>
       </div>
@@ -47,14 +57,19 @@ export default function UsersPage() {
         {users.map((user) => (
           <div className="user-card" key={user.id}>
             <h3>{user.nombre}</h3>
-            <p>ID: {user.id}</p>
-            <p>Correo: {user.correo}</p>
-            <p>Rol: {user.rol}</p>
+            <p>Id del usuario</p>
+            <p>{user.id}</p>
+            <p>Rol</p>
+            <p>{user.rol}</p>
             <p>Estado: {user.activo ? "Activo" : "Inactivo"}</p>
-
-            <Link to={`/users/${user.id}/edit`}>
-              <button>Editar</button>
-            </Link>
+            
+            <div className="user-card-actions">
+              <Link to={`/users/${user.id}/edit`}>
+                <button className="btn-light-icon" type="button">
+                  ✎
+                </button>
+              </Link>
+            </div>
           </div>
         ))}
       </div>

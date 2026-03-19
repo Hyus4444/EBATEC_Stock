@@ -27,22 +27,23 @@ export default function AuditPage() {
   }, [tab]);
 
   return (
-    <div className="card">
-      <div className="page-header">
-        <h1>Auditoría</h1>
-        <button onClick={loadLogs}>Recargar</button>
+    <div>
+      <div className="inventory-toolbar">
+        <div className="searchbar-mock">⌕</div>
       </div>
 
       <div className="tabs-row">
         <button
-          className={tab === "logs" ? "active-tab" : ""}
+          className={tab === "logs" ? "btn-dark active-tab" : "btn-primary"}
           onClick={() => setTab("logs")}
+          type="button"
         >
           Logs
         </button>
         <button
-          className={tab === "alerts" ? "active-tab" : ""}
+          className={tab === "alerts" ? "btn-dark active-tab" : "btn-primary"}
           onClick={() => setTab("alerts")}
+          type="button"
         >
           Alertas de stock
         </button>
@@ -53,48 +54,42 @@ export default function AuditPage() {
           {loading && <p>Cargando logs...</p>}
           {error && <p className="error-text">{error}</p>}
 
-          {!loading && !error && logs.length === 0 && (
-            <p>No hay registros de auditoría.</p>
-          )}
-
           {!loading && !error && logs.length > 0 && (
             <div className="table-wrapper">
               <table className="audit-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Usuario</th>
-                    <th>Acción</th>
-                    <th>Entidad</th>
-                    <th>ID entidad</th>
-                    <th>Detalle</th>
-                    <th>Fecha</th>
+                    <th>id_auditoria</th>
+                    <th>fecha_hora</th>
+                    <th>entidad_afectada</th>
+                    <th>operacion</th>
+                    <th>id_usuario</th>
+                    <th>detalle</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logs.map((log) => (
                     <tr key={log.id}>
                       <td>{log.id}</td>
-                      <td>{log.usuario_id}</td>
-                      <td>{log.accion}</td>
-                      <td>{log.entidad}</td>
-                      <td>{log.entidad_id}</td>
-                      <td>{log.detalle}</td>
                       <td>{new Date(log.fecha).toLocaleString()}</td>
+                      <td>{log.entidad}</td>
+                      <td>{log.accion}</td>
+                      <td>{log.usuario_id}</td>
+                      <td>{log.detalle}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           )}
+
+          {!loading && !error && logs.length === 0 && (
+            <p>No hay registros de auditoría.</p>
+          )}
         </>
       )}
 
-      {tab === "alerts" && (
-        <div>
-          <p>Vista de alertas de stock pendiente de implementación.</p>
-        </div>
-      )}
+      {tab === "alerts" && <p>Vista de alertas pendiente de implementación.</p>}
     </div>
   );
 }

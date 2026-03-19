@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logoEbatec from "../assets/logo-ebatec-stock.png";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -37,33 +38,45 @@ export default function LoginPage() {
 
   return (
     <div className="center-page">
-      <form className="card login-form" onSubmit={handleSubmit}>
-        <h1>Iniciar sesión</h1>
+      <div className="login-shell">
+        <div className="login-grid">
+          <div className="login-left">
+            <div className="login-logo">
+              <img src={logoEbatec} alt="Logo Ebatec" className="logo-img"/></div>
+          </div>
+          <div className="login-form-card">
+            <h1>Correo</h1>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="email"
+                name="correo"
+                value={form.correo}
+                onChange={handleChange}
+                placeholder="Value"
+                required
+              />
 
-        <label>Correo</label>
-        <input
-          type="email"
-          name="correo"
-          value={form.correo}
-          onChange={handleChange}
-          required
-        />
+              <h1>Contraseña</h1>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Value"
+                required
+              />
 
-        <label>Contraseña</label>
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
+              {error && <p className="error-text">{error}</p>}
 
-        {error && <p className="error-text">{error}</p>}
+              <button className="login-submit-btn" type="submit" disabled={loading}> 
+                {loading ? "Ingresando..." : "Iniciar sesión"}
+              </button>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Ingresando..." : "Ingresar"}
-        </button>
-      </form>
+              <span className="login-link">¿Olvidó su contraseña?</span>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
