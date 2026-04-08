@@ -78,7 +78,7 @@ export default function EditUserPage() {
       />
 
       <div className="status-box">
-        <button className="danger-btn" onClick={handleStatusChange}>
+        <button className="btn-danger" onClick={handleStatusChange}>
           {statusText}
         </button>
       </div>

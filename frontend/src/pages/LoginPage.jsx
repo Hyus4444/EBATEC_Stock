@@ -42,7 +42,7 @@ export default function LoginPage() {
         <div className="login-grid">
           <div className="login-left">
             <div className="login-logo">
-              <img src={logoEbatec} alt="Logo Ebatec" className="logo-img"/></div>
+              <img src={logoEbatec} alt="Logo Ebatec-Stock" className="logo-img"/></div>
           </div>
           <div className="login-form-card">
             <h1>Correo</h1>

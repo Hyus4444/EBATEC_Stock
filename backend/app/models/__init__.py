@@ -4,3 +4,4 @@ from app.models.inventory_movement import InventoryMovement
 from app.models.product import Product
 from app.models.role import Role
 from app.models.user import User
+from app.models.stock_alert import StockAlert

@@ -34,3 +34,9 @@ class ProductResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class ProductPaginatedResponse(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    items: list[ProductResponse]

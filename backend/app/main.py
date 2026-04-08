@@ -7,6 +7,7 @@ from app.routers.audit import router as audit_router
 from app.routers.categories import router as categories_router
 from app.routers.products import router as products_router
 from app.routers.inventory_movements import router as inventory_movements_router
+from app.routers.stock_alerts import router as stock_alerts_router
 
 app = FastAPI(title="EBATEC Stock API")
 
@@ -24,6 +25,7 @@ app.include_router(audit_router)
 app.include_router(categories_router)
 app.include_router(products_router)
 app.include_router(inventory_movements_router)
+app.include_router(stock_alerts_router)
 
 @app.get("/health")
 def health():
