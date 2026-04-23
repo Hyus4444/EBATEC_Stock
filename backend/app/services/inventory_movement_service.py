@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.repositories.inventory_movement_repository import create_inventory_movement
 from app.repositories.product_repository import get_product_by_id
 from app.services.audit_service import create_audit_log
+from app.services.stock_alert_service import sync_stock_alert_for_product
 
 
 ENTRY_ALLOWED_REASONS = {"COMPRA", "REINTEGRO"}
@@ -48,6 +49,9 @@ def register_entry_service(db: Session, payload, current_user) -> dict:
 
         product = _get_active_product_or_404(db, item.producto_id)
         product.stock_actual += item.cantidad
+        product = _get_active_product_or_404(db, item.producto_id)
+        _validate_reason_by_category(product, item.motivo, "ENTRADA")
+        sync_stock_alert_for_product(db, product)
 
         create_inventory_movement(
             db=db,
@@ -107,6 +111,10 @@ def register_exit_service(db: Session, payload, current_user) -> dict:
 
     for item, product in validated_items:
         product.stock_actual -= item.cantidad
+        
+        sync_stock_alert_for_product(db, product)
+        product = _get_active_product_or_404(db, item.producto_id)
+        _validate_reason_by_category(product, item.motivo, "SALIDA")
 
         create_inventory_movement(
             db=db,
@@ -142,7 +150,7 @@ def adjust_inventory_service(db: Session, payload, current_user) -> dict:
     if payload.tipo_ajuste not in {"INCREMENTO", "DECREMENTO"}:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="tipo_ajuste debe ser INCREMENTO o DECREMENTO",
+            detail="tipo_ajuste debe ser Incremento o Decremento",
         )
 
     if payload.tipo_ajuste == "DECREMENTO" and payload.cantidad > product.stock_actual:
@@ -159,7 +167,9 @@ def adjust_inventory_service(db: Session, payload, current_user) -> dict:
     else:
         product.stock_actual -= payload.cantidad
         movement_type = "AJUSTE_DECREMENTO"
-
+        
+    sync_stock_alert_for_product(db, product)
+    
     create_inventory_movement(
         db=db,
         id_operacion=id_operacion,
@@ -186,3 +196,23 @@ def adjust_inventory_service(db: Session, payload, current_user) -> dict:
         "message": "Ajuste registrado correctamente",
         "id_operacion": id_operacion,
     }
+    
+def _validate_reason_by_category(product, reason: str, movement_type: str) -> None:
+    category_name = product.categoria.nombre
+
+    if reason == "CONSUMO" and category_name != "MATERIA_PRIMA":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"El motivo Consumo solo aplica a productos de categoría Materia Prima. Producto: {product.codigo_interno}",
+        )
+
+    if reason == "REINTEGRO" and category_name != "MATERIA_PRIMA":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"El motivo Reintegro solo aplica a productos de categoría Materia Prima. Producto: {product.codigo_interno}",
+        )
+    if reason == "DESPACHO" and category_name != "ACCESORIO":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"El motivo Despacho solo aplica a productos tipo Accesorio. Producto: {product.codigo_interno}",
+        )

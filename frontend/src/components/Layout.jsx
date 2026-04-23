@@ -20,19 +20,22 @@ export default function Layout() {
   };
 
   const getTitle = () => {
-    if (location.pathname.startsWith("/inventory/new")) return "Creación de nuevo producto";
+    if (location.pathname.startsWith("/inventory/new")) return "Crear nuevo producto";
     if (location.pathname.startsWith("/inventory/entry")) return "Registrar Entrada";
     if (location.pathname.startsWith("/inventory/exit")) return "Registrar Salida";
-    if (location.pathname.startsWith("/inventory/adjust")) return "Ajuste de inventario";
+    if (location.pathname.startsWith("/inventory/") && location.pathname.endsWith("/adjust")) {
+      return "Ajuste de inventario";
+    }
 
     if (location.pathname.startsWith("/inventory/") && location.pathname.endsWith("/edit")) {
-      return "Modificación de producto";
+      return "Modificar producto";  
     }
 
     if (location.pathname.startsWith("/users/new")) return "Creación de nuevo usuario";
     if (location.pathname.startsWith("/users/") && location.pathname.endsWith("/edit")) {
       return "Modificar usuario";
     }
+
 
     return titles[location.pathname] || "EBATEC Stock";
   };

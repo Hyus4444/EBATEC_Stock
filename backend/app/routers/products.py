@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, Query, status
+
 
 from app.core.database import get_db
 from app.dependencies.auth import require_admin, require_any_authenticated
 from app.schemas.product import (
     ProductCreate,
+    ProductPaginatedResponse,
     ProductResponse,
     ProductStatusUpdate,
     ProductUpdate,
@@ -12,7 +15,7 @@ from app.schemas.product import (
 from app.services.product_service import (
     create_product_service,
     get_product_detail_service,
-    list_products_service,
+    list_products_paginated_service,
     update_product_service,
     update_product_status_service,
 )
@@ -20,12 +23,22 @@ from app.services.product_service import (
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
-@router.get("", response_model=list[ProductResponse])
+@router.get("", response_model=ProductPaginatedResponse)
 def list_products(
+    query: str | None = Query(default=None),
+    categoria_id: int | None = Query(default=None),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=50),
     db: Session = Depends(get_db),
     current_user=Depends(require_any_authenticated),
 ):
-    return list_products_service(db)
+    return list_products_paginated_service(
+        db,
+        query=query,
+        categoria_id=categoria_id,
+        page=page,
+        page_size=page_size,
+    )
 
 
 @router.get("/{product_id}", response_model=ProductResponse)

@@ -87,9 +87,17 @@ export default function EditProductPage() {
         onSubmit={handleSubmit}
         submitText="Guardar cambios"
       />
-
+      <div className="form-secondary-actions">
+        <button
+          className="btn-primary"
+          type="button"
+          onClick={() => navigate(`/inventory/${id}/adjust`)}
+        >
+          Ajuste unitario
+        </button>
+      </div>
       <div className="status-box">
-        <button className="danger-btn" onClick={handleStatusChange}>
+        <button className="btn-danger" onClick={handleStatusChange} type="button">
           {statusText}
         </button>
       </div>

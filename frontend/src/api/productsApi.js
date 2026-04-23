@@ -1,7 +1,17 @@
 import api from "./axios";
 
-export const getProductsRequest = async () => {
-  const response = await api.get("/products");
+export const getProductsRequest = async ({
+  query = "",
+  categoria_id = "",
+  page = 1,
+  page_size = 50,
+} = {}) => {
+  const params = { page, page_size };
+
+  if (query) params.query = query;
+  if (categoria_id) params.categoria_id = categoria_id;
+
+  const response = await api.get("/products", { params });
   return response.data;
 };
 

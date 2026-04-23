@@ -1,5 +1,5 @@
-from datetime import datetime
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class AuditLogResponse(BaseModel):
@@ -13,3 +13,10 @@ class AuditLogResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class AuditLogPaginatedResponse(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    items: list[AuditLogResponse]

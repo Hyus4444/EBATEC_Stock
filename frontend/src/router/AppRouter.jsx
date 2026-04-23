@@ -38,7 +38,7 @@ export default function AppRouter() {
           <Route path="/inventory/:id/edit" element={<EditProductPage />} />
           <Route path="/inventory/entry" element={<EntryPage />} />
           <Route path="/inventory/exit" element={<ExitPage />} />
-          <Route path="/inventory/adjust" element={<AdjustInventoryPage />} />
+          <Route path="/inventory/:id/adjust" element={<AdjustInventoryPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
