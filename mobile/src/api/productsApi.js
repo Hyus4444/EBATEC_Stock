@@ -4,7 +4,7 @@ export const getProductsRequest = async ({
   query = "",
   categoria_id = "",
   page = 1,
-  page_size = 50,
+  page_size = 10,
 } = {}) => {
   const params = { page, page_size };
 
@@ -35,8 +35,8 @@ export const getAllProductsForSelectRequest = async () => {
   return allProducts;
 };
 
-export const getProductByIdRequest = async (id) => {
-  const response = await api.get(`/products/${id}`);
+export const getCategoriesRequest = async () => {
+  const response = await api.get("/categories");
   return response.data;
 };
 
@@ -45,12 +45,7 @@ export const createProductRequest = async (payload) => {
   return response.data;
 };
 
-export const updateProductRequest = async (id, payload) => {
-  const response = await api.put(`/products/${id}`, payload);
-  return response.data;
-};
-
-export const updateProductStatusRequest = async (id, payload) => {
-  const response = await api.patch(`/products/${id}/status`, payload);
+export const getProductByIdRequest = async (id) => {
+  const response = await api.get(`/products/${id}`);
   return response.data;
 };

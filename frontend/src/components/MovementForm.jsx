@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProductsRequest } from "../api/productsApi";
+import { getAllProductsForSelectRequest } from "../api/productsApi";
 
 export default function MovementForm({
   title,
@@ -18,21 +18,30 @@ export default function MovementForm({
   const [error, setError] = useState("");
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const data = await getProductsRequest();
-        setProducts(data.filter((product) => product.activo));
-      } catch (err) {
-        setError(err?.response?.data?.detail || "No se pudieron cargar los productos");
-      } finally {
-        setLoadingProducts(false);
-      }
-    };
+useEffect(() => {
+  const loadProducts = async () => {
+    try {
+      const data = await getAllProductsForSelectRequest();
+      setProducts(data.filter((product) => product.activo));
+    } catch (err) {
+      const detail = err?.response?.data?.detail;
+      const message =
+        typeof detail === "string"
+          ? detail
+          : Array.isArray(detail)
+          ? detail.map((item) => item?.msg || "Error de validación").join(", ")
+          : "No se pudieron cargar los productos";
 
-    loadProducts();
-  }, []);
+      setError(message);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
+
+  loadProducts();
+}, []);
 
   const updateItem = (index, field, value) => {
     const newItems = [...items];
@@ -64,7 +73,15 @@ export default function MovementForm({
         observacion: observacion || null,
       });
     } catch (err) {
-      setError(err?.response?.data?.detail || "Ocurrió un error");
+      const detail = err?.response?.data?.detail;
+      const message =
+        typeof detail === "string"
+          ? detail
+          : Array.isArray(detail)
+          ? detail.map((item) => item?.msg || "Error de validación").join(", ")
+          : "Ocurrió un error";
+
+      setError(message);
     } finally {
       setSubmitting(false);
     }
