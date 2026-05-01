@@ -8,6 +8,8 @@ import PlaceholderScreen from "../screens/PlaceholderScreen";
 import CreateProductScreen from "../screens/CreateProductScreen";
 import EntryScreen from "../screens/EntryScreen";
 import ExitScreen from "../screens/ExitScreen";
+import CreateUserScreen from "../screens/CreateUserScreen";
+import EditUserScreen from "../screens/EditUserScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +35,8 @@ export default function MainNavigator() {
       <Stack.Screen name="CreateProduct" component={CreateProductScreen} options={{ title: "Crear Producto" }} />
       <Stack.Screen name="Entry" component={EntryScreen} options={{ title: "Registro de Entrada" }} />
       <Stack.Screen name="Exit" component={ExitScreen} options={{ title: "Registro de Salida" }} />
+      <Stack.Screen name="CreateUser" component={CreateUserScreen} options={{ title: "Crear Usuario" }} />
+      <Stack.Screen name="EditUser" component={EditUserScreen} options={{ title: "Editar Usuario" }} />
     </Stack.Navigator>
   );
 }

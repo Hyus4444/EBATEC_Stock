@@ -47,7 +47,7 @@ export default function Layout() {
           <div className="view-header-left">
             <button
               className="inventory-icon-btn"
-              onClick={() => navigate("/inventory")}
+              onClick={() => navigate("/home")}
               type="button"
               title="Ir a inventario"
             >
@@ -60,7 +60,7 @@ export default function Layout() {
           <button
             className="header-logo-btn"
             type="button"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/inventory")}
             title="Ir al inicio"
           >
             <img src={logoEbatec} alt="Logo Ebatec" className="header-logo-img" width="250" />
