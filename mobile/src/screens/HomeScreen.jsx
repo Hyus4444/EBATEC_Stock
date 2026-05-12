@@ -22,6 +22,16 @@ export default function HomeScreen({ navigation }) {
       <Text style={styles.subtitle}>Rol: {user?.rol || ""}</Text>
 
       <View style={styles.cardList}>
+        {canViewInventory(user) && (
+          <TouchableOpacity
+            style={[styles.card, styles.inventoryCard]}
+            onPress={() => navigation.navigate("Inventory")}
+          >
+            <Text style={styles.cardTitle}>Inventario</Text>
+            <Text style={styles.cardText}>Consulta y navegación del inventario</Text>
+          </TouchableOpacity>
+        )}
+        
         {canRegisterEntry && (
           <TouchableOpacity
             style={[styles.card, styles.entryCard]}
@@ -42,13 +52,13 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         )}
 
-        {canViewInventory(user) && (
+        {canViewAudit(user) && (
           <TouchableOpacity
-            style={[styles.card, styles.inventoryCard]}
-            onPress={() => navigation.navigate("Inventory")}
+            style={[styles.card, styles.auditCard]}
+            onPress={() => navigation.navigate("Audit")}
           >
-            <Text style={styles.cardTitle}>Inventario</Text>
-            <Text style={styles.cardText}>Consulta y navegación del inventario</Text>
+            <Text style={styles.cardTitle}>Auditoría</Text>
+            <Text style={styles.cardText}>Consulta de logs del sistema</Text>
           </TouchableOpacity>
         )}
 
@@ -69,16 +79,6 @@ export default function HomeScreen({ navigation }) {
           >
             <Text style={styles.cardTitle}>Usuarios</Text>
             <Text style={styles.cardText}>Módulo placeholder</Text>
-          </TouchableOpacity>
-        )}
-
-        {canViewAudit(user) && (
-          <TouchableOpacity
-            style={[styles.card, styles.auditCard]}
-            onPress={() => navigation.navigate("Audit")}
-          >
-            <Text style={styles.cardTitle}>Auditoría</Text>
-            <Text style={styles.cardText}>Consulta de logs del sistema</Text>
           </TouchableOpacity>
         )}
       </View>
