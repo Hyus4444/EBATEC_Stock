@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { theme } from "../styles/theme";
@@ -25,12 +26,12 @@ export default function LoginScreen() {
   try {
     setError("");
     setLoading(true);
-
+    if (!correo.trim() || !password.trim()) {
+      setError("Por favor, ingresa correo y contraseña");
+      return;
+    }
     const cleanCorreo = correo.trim().toLowerCase();
     const cleanPassword = password.trim();
-
-
-
     await login(cleanCorreo, cleanPassword);
   } catch (err) {
     setError(err?.response?.data?.detail || err?.message || "Error al iniciar sesión");
@@ -47,10 +48,7 @@ export default function LoginScreen() {
       >
         <View style={styles.panel}>
           <View style={styles.leftSection}>
-            <Text style={styles.logo}>
-              <Text style={styles.logoRed}>E</Text>batec-Stock
-            </Text>
-            <Text style={styles.welcome}>Bienvenido al sistema</Text>
+              <Image source={require("C:/Users/Jairo/Documents/Repositorios/Proyecto de autogestion/EBATEC Stock/mobile/assets/logo.png")} style={{width: 400, height: 200}} />
           </View>
 
           <View style={styles.rightSection}>
